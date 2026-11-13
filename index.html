@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F6F8FB">
+<title>English Hub — 단어 · 듣기 · 문법</title>
+<meta name="description" content="단어 · 듣기 · 문법을 한 곳에서 공부하는 영어 학습 앱">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23111B2B'/%3E%3Crect x='15' y='20.500' width='8' height='23' rx='4' fill='%235E8BFF'/%3E%3Crect x='28' y='14' width='8' height='36' rx='4' fill='%23A07BFF'/%3E%3Crect x='41' y='23' width='8' height='18' rx='4' fill='%234FC891'/%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="English Hub">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
+<script>
+/* 첫 페인트 전에 테마 적용 */
+(function () { try { var t = localStorage.getItem('englishhub.theme') || 'auto'; if (t === 'auto') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; document.documentElement.dataset.theme = t; } catch (e) {} })();
+</script>
+<style>
+/* English Hub 통합 홈 — 무채색만 쓰고, 파트 색(단어 파랑 · 듣기 보라 · 문법 초록)은 카드에만 쓴다. */
+:root {
+  --bg: #F6F8FB; --surface: #FFFFFF; --ink: #111B2B; --ink-2: #465166; --muted: #8791A1; --line: #E4E8EF; --track: #E3E7EE;
+  --shadow: 0 0 0 1px rgba(20, 30, 50, .06), 0 1px 2px rgba(20, 20, 30, .04), 0 16px 32px -20px rgba(20, 20, 30, .18);
+  --sans: -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", system-ui, sans-serif;
+}
+[data-theme="dark"] {
+  --bg: #0C111B; --surface: #141B28; --ink: #EEF1F6; --ink-2: #B4BDCC; --muted: #77839A; --line: #243044; --track: #212B3C;
+  --shadow: 0 0 0 1px rgba(255, 255, 255, .06), 0 16px 32px -20px rgba(0, 0, 0, .7);
+  color-scheme: dark;
+}
+.p-word { --brand: #2752C4; --soft: #E7EDFB; --hero: #16296B; --glow: #5E8BFF; }
+.p-hear { --brand: #6B3FC4; --soft: #EFE9FB; --hero: #2E1B6B; --glow: #A07BFF; }
+.p-grammar { --brand: #1B7A50; --soft: #E2F2EA; --hero: #11503A; --glow: #4FC891; }
+[data-theme="dark"] .p-word { --brand: #9DB8FF; --soft: #1B2747; --hero: #16213F; }
+[data-theme="dark"] .p-hear { --brand: #C2A8FF; --soft: #271F45; --hero: #221A42; --glow: #9A78F0; }
+[data-theme="dark"] .p-grammar { --brand: #8FDDB6; --soft: #173226; --hero: #14312A; }
+
+* { box-sizing: border-box; margin: 0; }
+html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.5 var(--sans); letter-spacing: -.01em; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; touch-action: manipulation; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; touch-action: manipulation; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 10px; }
+svg.ic { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+.page { max-width: 1080px; margin: 0 auto; padding: calc(18px + env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) calc(32px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.logo { display: flex; align-items: center; gap: 10px; font-weight: 750; font-size: 17px; letter-spacing: -.03em; }
+.logo i { width: 34px; height: 34px; border-radius: 10px; background: #111B2B; display: flex; align-items: center; justify-content: center; gap: 3px; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); }
+.logo i b { width: 4.5px; border-radius: 3px; }
+.theme { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px 0 10px; border-radius: 999px; color: var(--ink-2); font-size: 13px; font-weight: 600; box-shadow: inset 0 0 0 1px var(--line); background: var(--surface); }
+.theme .ic { width: 17px; height: 17px; }
+
+.hello { margin-top: 26px; }
+.hello small { display: block; font-size: 12px; font-weight: 650; letter-spacing: .12em; color: var(--muted); }
+.hello h1 { font-size: clamp(24px, 6.4vw, 32px); line-height: 1.25; letter-spacing: -.035em; margin-top: 6px; word-break: keep-all; }
+.pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px 0 10px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); font-size: 13px; font-weight: 650; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.pill .ic { width: 16px; height: 16px; color: var(--muted); }
+
+.next { display: flex; align-items: center; gap: 12px; margin-top: 18px; padding: 14px 16px; border-radius: 14px; background: var(--soft); color: var(--ink); }
+.next > .ic { color: var(--brand); width: 22px; height: 22px; }
+.next .txt { flex: 1; min-width: 0; font-size: 13px; color: var(--ink-2); }
+.next .txt b, .next .txt small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.next .txt b { font-size: 15px; font-weight: 700; letter-spacing: -.02em; color: var(--ink); } .next .txt small { font-size: 13px; }
+.next .go { color: var(--brand); display: flex; }
+
+.cards { display: grid; gap: 14px; margin-top: 18px; }
+.card { display: flex; flex-direction: column; border-radius: 20px; background: var(--surface); box-shadow: var(--shadow); overflow: hidden; transition: transform .15s; }
+.card:active { transform: scale(.985); }
+.card-hero { position: relative; isolation: isolate; overflow: hidden; padding: 18px 18px 16px; color: #fff; background: var(--hero); }
+.card-hero::before { content: ""; position: absolute; inset: 0; z-index: -1; opacity: .8; background:
+  radial-gradient(70% 120% at 100% 0%, color-mix(in srgb, var(--glow) 70%, transparent) 0%, transparent 66%),
+  radial-gradient(50% 90% at 0% 130%, color-mix(in srgb, var(--glow) 30%, transparent) 0%, transparent 62%); }
+.card-top { display: flex; align-items: center; gap: 12px; }
+.card-ic { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: rgba(255, 255, 255, .14); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .16); flex: none; }
+.card-ic .ic { width: 22px; height: 22px; }
+.card-name { flex: 1; min-width: 0; } .card-name small { display: block; font-size: 10.5px; font-weight: 700; letter-spacing: .16em; opacity: .7; }
+.card-name b { display: block; font-size: 20px; font-weight: 750; letter-spacing: -.03em; line-height: 1.2; }
+.card-name b em { font-style: normal; font-size: 13px; font-weight: 600; opacity: .7; margin-left: 6px; letter-spacing: -.01em; }
+.card-hero > p { margin-top: 12px; font-size: 13.5px; opacity: .86; min-height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.card-body { padding: 14px 18px 16px; display: grid; gap: 12px; }
+.goal { display: flex; align-items: baseline; justify-content: space-between; font-size: 13px; color: var(--ink-2); }
+.goal b { font-size: 15px; color: var(--ink); font-variant-numeric: tabular-nums; } .goal .done { color: var(--brand); font-weight: 700; }
+.bar { height: 6px; border-radius: 999px; background: var(--track); overflow: hidden; margin-top: -4px; }
+.bar i { display: block; height: 100%; border-radius: 999px; background: var(--brand); }
+.cells { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.cell { background: var(--bg); border-radius: 12px; padding: 9px 10px; min-width: 0; }
+.cell small { display: block; font-size: 11px; color: var(--muted); font-weight: 600; }
+.cell b { display: block; font-size: 14.5px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cell.hot b { color: var(--brand); }
+.foot { margin-top: 22px; text-align: center; font-size: 12px; color: var(--muted); }
+
+@media (min-width: 860px) {
+  .page { padding-top: 40px; }
+  .cards { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .card-hero { padding: 22px 22px 20px; } .card-body { padding: 18px 22px 20px; }
+  .card:hover { transform: translateY(-2px); }
+}
+@media (prefers-reduced-motion: reduce) { .card { transition: none; } }
+</style>
+</head>
+<body>
+<div class="page" id="page"></div>
+<noscript><p style="padding:24px">이 앱은 JavaScript가 필요합니다.</p></noscript>
+<script src="shared/hub.js" data-root="./"></script>
+<script>
+(function () {
+  'use strict';
+  var EH = window.EH;
+  var ICON = {
+    word: 'M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19V5M8 7h7M8 11h5',
+    hear: 'M4 15v-3a8 8 0 0 1 16 0v3M4 14h3v6H5a1 1 0 0 1-1-1zM20 14h-3v6h2a1 1 0 0 0 1-1z',
+    grammar: 'M12 21v-8.5M12 13.5c0-4-2.8-6.2-7.5-6.2 0 4.2 2.8 6.2 7.5 6.2zM12 11c0-3.8 2.6-6.5 7.5-6.5 0 4.6-2.8 6.5-7.5 6.5z',
+    auto: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 3v18M12 7l5.5 1.5M12 12h9M12 17l5.5-1.5',
+    light: 'M12 4V2M12 22v-2M4 12H2M22 12h-2M5.6 5.6 4.2 4.2M19.8 19.8l-1.4-1.4M5.6 18.4l-1.4 1.4M19.8 4.2l-1.4 1.4M12 7.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9z',
+    dark: 'M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.500z',
+    flame: 'M12 3c1 3 4 4.5 4 8.500a4 4 0 0 1-8 0c0-1.500.5-2.500 1-3.500C6.5 9.500 5 12 5 14.500a7 7 0 0 0 14 0C19 9 14.500 6.500 12 3z',
+    review: 'M20 11a8 8 0 1 0-2.300 5.700M20 4v7h-7',
+    arrow: 'M5 12h14M13 6l6 6-6 6',
+    check: 'M5 12.500l4.500 4.500L19 7.500'
+  };
+  var ic = function (n) { return '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="' + ICON[n] + '"/></svg>'; };
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var num = function (n) { return Number(n).toLocaleString('ko-KR'); };
+  var read = function (k) { try { return JSON.parse(localStorage.getItem(k)) || {}; } catch (e) { return {}; } };
+  var MODE_LABEL = { auto: '시스템', light: '라이트', dark: '다크' };
+
+  /* 날짜 번호: 단어 · 문법 파트가 쓰는 것과 같은 계산(그 지역 날짜 기준) */
+  var dnum = function (d) { d = d || new Date(); return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5); };
+  var ymd = function (d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+  function run(has, t) { var d = has(t) ? t : t - 1, n = 0; while (has(d)) { n++; d--; } return n; }
+
+  /* 세 파트의 학습 기록을 저장된 그대로 읽어 요약한다(기록 형식은 각 파트의 것). */
+  function stats() {
+    var t = dnum(), now = Date.now();
+    var W = read('autoword.v1'), H = read('gwiteuim.v1'), G = read('grammar-forest-v1');
+    var wd = W.days || {}, ww = W.words || {}, hd = H.days || {}, hs = H.srs || {}, gd = G.days || {}, gs = G.srs || {};
+    var hkey = function (n) { return ymd(new Date(n * 864e5 + new Date().getTimezoneOffset() * 6e4 + 432e5)); };
+    return {
+      word: { today: (wd[t] && wd[t].n) || 0, goal: W.goal || 30, streak: run(function (d) { return wd[d] && wd[d].n; }, t),
+        due: Object.keys(ww).filter(function (k) { return ww[k].n > 0 && ww[k].d <= t; }).length },
+      hear: { today: hd[ymd(new Date())] || 0, goal: H.goal || 20, streak: run(function (d) { return hd[hkey(d)]; }, t),
+        due: Object.keys(hs).filter(function (k) { return hs[k].d <= now; }).length },
+      grammar: { today: gd[t] || 0, goal: (G.profile && G.profile.goal) || 120, streak: run(function (d) { return gd[d] > 0; }, t),
+        due: Object.keys(gs).filter(function (k) { return gs[k].due <= t; }).length }
+    };
+  }
+
+  var PARTS = [
+    { key: 'word', name: '단어', title: 'Auto Word', eyebrow: 'VOCABULARY', unit: '회', each: '단어', tagline: '중학 → 고등 → 토익, 한 길로 외우는 영단어' },
+    { key: 'hear', name: '듣기', title: '귀트임', eyebrow: 'LISTENING', unit: '문장', each: '문장', tagline: '자막 없이 들리는 날까지, 하루 20문장 귀 열기' },
+    { key: 'grammar', name: '문법', title: '문법의 숲', eyebrow: 'GRAMMAR', unit: 'XP', each: '단원', tagline: '기초부터 다시 잡는 영어 문법 24단원' }
+  ];
+
+  function card(p, s, sum) {
+    var done = s.today >= s.goal, pct = Math.max(0, Math.min(100, s.today / s.goal * 100));
+    var prog = sum.total ? num(sum.done) + ' / ' + num(sum.total) : '—';
+    return '<a class="card p-' + p.key + '" href="' + p.key + '/">'
+      + '<div class="card-hero"><div class="card-top"><span class="card-ic">' + ic(p.key) + '</span>'
+      + '<span class="card-name"><small>' + p.eyebrow + '</small><b>' + p.name + '<em>' + p.title + '</em></b></span>' + ic('arrow') + '</div>'
+      + '<p>' + esc(sum.next || p.tagline) + '</p></div>'
+      + '<div class="card-body"><div class="goal"><span>오늘의 목표</span>'
+      + (done ? '<span class="done">달성 · ' + num(s.today) + ' ' + p.unit + '</span>' : '<span><b>' + num(s.today) + '</b> / ' + num(s.goal) + ' ' + p.unit + '</span>') + '</div>'
+      + '<div class="bar"><i style="width:' + pct + '%"></i></div>'
+      + '<div class="cells"><div class="cell"><small>연속</small><b>' + s.streak + '일</b></div>'
+      + '<div class="cell' + (s.due ? ' hot' : '') + '"><small>복습</small><b>' + num(s.due) + '</b></div>'
+      + '<div class="cell"><small>' + p.each + '</small><b>' + prog + '</b></div></div></div></a>';
+  }
+
+  /* 추천 한 줄: 밀린 복습이 가장 많은 파트 → 오늘 목표를 아직 못 채운 파트 → 모두 달성 */
+  function suggest(st, sums) {
+    var due = PARTS.filter(function (p) { return st[p.key].due > 0; }).sort(function (a, b) { return st[b.key].due - st[a.key].due; })[0];
+    if (due) return { p: due, head: due.name + ' 복습 ' + num(st[due.key].due) + '개가 기다려요', sub: '밀린 복습부터 끝내면 오래 기억에 남아요', icon: 'review' };
+    var todo = PARTS.filter(function (p) { return st[p.key].today < st[p.key].goal; })[0];
+    if (todo) return { p: todo, head: sums[todo.key].next || todo.tagline, sub: todo.name + ' · 오늘 ' + num(st[todo.key].today) + ' / ' + num(st[todo.key].goal) + ' ' + todo.unit, icon: todo.key };
+    return { p: PARTS[0], head: '오늘 목표를 모두 채웠어요', sub: '더 하고 싶다면 단어부터 가볍게', icon: 'check' };
+  }
+
+  function render() {
+    EH.apply();
+    var st = stats(), sums = {}, now = new Date(), h = now.getHours();
+    PARTS.forEach(function (p) { sums[p.key] = EH.readSummary(p.key); });
+    var hello = h < 5 ? '늦은 시간까지 수고해요' : h < 12 ? '좋은 아침이에요' : h < 18 ? '좋은 오후예요' : '좋은 저녁이에요';
+    var best = Math.max(st.word.streak, st.hear.streak, st.grammar.streak);
+    var due = st.word.due + st.hear.due + st.grammar.due;
+    var hit = PARTS.filter(function (p) { return st[p.key].today >= st[p.key].goal; }).length;
+    var sg = suggest(st, sums), mode = EH.mode();
+    var date = (now.getMonth() + 1) + '월 ' + now.getDate() + '일 ' + '일월화수목금토'[now.getDay()] + '요일';
+    document.getElementById('page').innerHTML =
+      '<header class="top"><span class="logo"><i><b style="height:13px;background:#5E8BFF"></b><b style="height:19px;background:#A07BFF"></b><b style="height:10px;background:#4FC891"></b></i>English Hub</span>'
+      + '<button class="theme" id="theme" aria-label="테마 바꾸기: 지금 ' + MODE_LABEL[mode] + '">' + ic(mode) + MODE_LABEL[mode] + '</button></header>'
+      + '<section class="hello"><small>' + date + '</small><h1>' + hello + '.<br>오늘은 무엇부터 할까요?</h1>'
+      + '<div class="pills"><span class="pill">' + ic('flame') + '연속 ' + best + '일</span><span class="pill">' + ic('review') + '복습 ' + num(due) + '</span><span class="pill">' + ic('check') + '목표 ' + hit + ' / 3</span></div></section>'
+      + '<a class="next p-' + sg.p.key + '" href="' + sg.p.key + '/">' + ic(sg.icon) + '<span class="txt"><b>' + esc(sg.head) + '</b><small>' + esc(sg.sub) + '</small></span><span class="go">' + ic('arrow') + '</span></a>'
+      + '<section class="cards">' + PARTS.map(function (p) { return card(p, st[p.key], sums[p.key]); }).join('') + '</section>'
+      + '<p class="foot">학습 기록은 이 기기에만 저장돼요</p>';
+    document.getElementById('theme').onclick = function () {
+      EH.setMode(EH.MODES[(EH.MODES.indexOf(EH.mode()) + 1) % EH.MODES.length]);
+      render();
+    };
+  }
+
+  EH.onSystemChange(render);
+  addEventListener('pageshow', render);                 /* 파트에서 돌아왔을 때 숫자를 새로 읽는다 */
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) render(); });
+  render();
+})();
+</script>
+</body>
+</html>
