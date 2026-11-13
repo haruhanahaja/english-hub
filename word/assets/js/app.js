@@ -106,6 +106,8 @@
   });
   let S = load();
   const EH = window.EH;
+  /* 파트 표시: 펼친 책. 듣기(파형) · 문법(새싹)과 같은 굵기의 선 아이콘이다. */
+  const LOGO = '<span class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5c-2-1.600-4.600-2-8-2v13c3.400 0 6 .4 8 2 2-1.600 4.600-2 8-2v-13c-3.400 0-6 .4-8 2zM12 6.5v13"/></svg></span>';
   /* English Hub: 테마는 통합 홈 · 세 파트가 같이 쓴다. 허브에 저장된 값이 있으면 그것을 따른다. */
   if (EH) { if (EH.stored()) S.theme = EH.mode(); else EH.setMode(S.theme); }
   function load() {
@@ -603,7 +605,7 @@
   const OB = { start: 0, goal: 30 };
   function onboarding() {
     openModal(`<div class="ob">
-      <div class="logo big"><span class="logo-mark">A</span></div>
+      <div class="logo big">${LOGO}</div>
       <h2>Auto Word에 오신 것을 환영해요</h2>
       <p class="sub">중학 → 고등 → 토익, 한 길로 이어지는 ${ALL.length}단어 코스입니다.<br>어디서부터 시작할까요?</p>
       <div class="ob-levels">${LEVELS.map((l, i) => `<button class="ob-lv lv-${l.key} ${OB.start === i ? 'on' : ''}" data-a="ob-start" data-v="${i}">
@@ -847,12 +849,12 @@
     const sk = streak(), day = S.days[today()] || { n: 0 }, due = dueWords().length;
     const link = (n) => `<a class="nav-item ${n.id === active ? 'on' : ''}" href="#/${n.id}" ${n.id === active ? 'aria-current="page"' : ''}>${ic(n.icon)}<span>${n.label}</span>${n.id === 'review' && due ? `<em>${due > 99 ? '99+' : due}</em>` : ''}</a>`;
     const hubIc = EH ? EH.ICON : '';
-    $('#side').innerHTML = `<a class="logo" href="#/home"><span class="logo-mark">A</span><span class="logo-text">Auto Word</span></a>
+    $('#side').innerHTML = `<a class="logo" href="#/home">${LOGO}<span class="logo-text">Auto Word</span></a>
       <a class="hub-link" href="../">${hubIc}<span>English Hub</span></a>
       <nav class="nav" aria-label="주 메뉴">${NAV.map(link).join('')}</nav>
       <div class="side-card"><div class="side-streak"><span class="flame-mini ${sk ? 'on' : ''}">${ic('flame')}</span><b>${sk}일 연속</b></div>
         <div class="progress"><i style="width:${Math.min(100, day.n / S.goal * 100)}%"></i></div><span class="sub">오늘 ${day.n} / ${S.goal}회</span></div>`;
-    $('#mtop').innerHTML = `<span class="mtop-left"><a class="icon-btn" href="../" aria-label="English Hub 홈">${hubIc}</a><a class="logo" href="#/home"><span class="logo-mark">A</span><span class="logo-text">Auto Word</span></a></span>
+    $('#mtop').innerHTML = `<span class="mtop-left"><a class="icon-btn" href="../" aria-label="English Hub 홈">${hubIc}</a><a class="logo" href="#/home">${LOGO}<span class="logo-text">Auto Word</span></a></span>
       <span class="mtop-right"><span class="pill ${sk ? 'on' : ''}">${ic('flame')}${sk}</span><a class="icon-btn" href="#/settings" aria-label="설정">${ic('gear')}</a></span>`;
     $('#tabbar').innerHTML = NAV.slice(0, 5).map(link).join('');
     if (EH) {   // 통합 홈이 보여 줄 요약

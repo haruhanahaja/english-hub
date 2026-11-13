@@ -62,11 +62,10 @@ mark { background: var(--lv-soft); color: var(--lv); font-weight: 650; padding: 
 .page.narrow { max-width: 720px; }
 .mtop, .tabbar { display: none; }
 
-.logo { display: flex; align-items: center; gap: 10px; padding: 0 10px; }
-.logo-mark { width: 34px; height: 34px; border-radius: 8px; background: var(--brand); color: var(--brand-ink); display: grid; place-items: center; font: 600 20px/1 var(--serif); position: relative; }
-.logo-mark::after { content: ""; position: absolute; right: 5px; bottom: 6px; width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
+.logo { display: flex; align-items: center; gap: 8px; padding: 0 10px; }
+.logo-mark { width: 28px; height: 28px; color: var(--brand); display: grid; place-items: center; } .logo-mark svg { width: 100%; height: 100%; }
 .logo-text { font-weight: 750; font-size: 17px; letter-spacing: -.03em; }
-.logo.big { justify-content: center; padding: 0; } .logo.big .logo-mark { width: 52px; height: 52px; border-radius: 12px; font-size: 30px; } .logo.big .logo-mark::after { right: 8px; bottom: 9px; width: 8px; height: 8px; }
+.logo.big { justify-content: center; padding: 0; } .logo.big .logo-mark { width: 52px; height: 52px; }
 
 .nav { display: flex; flex-direction: column; gap: 3px; }
 .nav-item { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 9px; color: var(--ink-2); font-weight: 600; transition: background .15s, color .15s; position: relative; }

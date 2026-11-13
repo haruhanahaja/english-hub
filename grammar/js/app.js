@@ -119,6 +119,7 @@
   const RING = 2 * Math.PI * 54;
   const ring = (p) => '<svg class="ring" viewBox="0 0 120 120" aria-hidden="true"><circle class="ring-bg" cx="60" cy="60" r="54"/><circle class="ring-fg" cx="60" cy="60" r="54" stroke-dasharray="'
     + RING.toFixed(1) + '" stroke-dashoffset="' + (RING * (1 - Math.max(0, Math.min(1, p)))).toFixed(1) + '"/></svg>';
+  const ICONS_SPROUT = '<path d="M12 21v-8.5"/><path d="M12 13.5c0-4-2.8-6.2-7.5-6.2 0 4.2 2.8 6.2 7.5 6.2z"/><path d="M12 11c0-3.8 2.6-6.5 7.5-6.5 0 4.6-2.8 6.5-7.5 6.5z"/>';
   const LOGO = (size) => '<span class="logo" style="--s:' + size + 'px">' + ic("sprout", Math.round(size * 0.56)) + "</span>";
   const starsHTML = (n) => '<span class="stars" aria-label="별 ' + n + '개">' + [1, 2, 3].map((i) => '<i class="' + (i <= n ? "on" : "") + '">★</i>').join("") + "</span>";
 
@@ -266,7 +267,7 @@
     }
     if (due) cta += '<button class="btn light" data-act="review">복습 ' + due + "문제 풀기</button>";
 
-    let html = '<header class="topbar"><div class="brand-row"><a class="hub-btn" href="../" aria-label="English Hub 홈">' + (EH ? EH.ICON : "") + '</a><h1 class="brand">문법의 숲</h1></div><div class="chips">'
+    let html = '<header class="topbar"><div class="brand-row"><a class="hub-btn" href="../" aria-label="English Hub 홈">' + (EH ? EH.ICON : "") + '</a><h1 class="brand"><svg class="brand-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICONS_SPROUT + '</svg>문법의 숲</h1></div><div class="chips">'
       + '<span class="chip" title="연속 학습일">' + ic("flame", 17) + streak + '</span><span class="chip" title="누적 XP">' + ic("xp", 17) + num(s.xp) + "</span></div></header>"
       + '<section class="hero"><div class="hero-text"><p class="hello">' + greeting() + ", " + esc(s.profile.name) + "님</p><p class=\"hero-sub\">" + sub + "</p>"
       + '<p class="goal"><b>' + tx + "</b> / " + goal + " XP<span>오늘의 목표</span></p></div>"
