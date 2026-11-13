@@ -184,18 +184,38 @@ function nextUnit() {
   return L.units.find(u => pct(u.items) < 1) || UNITS.find(u => u.level.id > L.id && pct(u.items) < 1) || L.units[0];
 }
 
-function renderHome() {
-  const knownN = ALL.filter(known).length, td = S.days[today()] || 0, due = dueItems(), nu = nextUnit(), st = streak();
-  const started = Object.keys(S.srs).length > 0;
-  app.innerHTML = `
+/* 아래 메뉴: 홈 · 복습 · 내 기록 (단어 · 문법 파트와 같은 자리 · 같은 이름) */
+let tab = 'home';
+const TABS = [
+  { id: 'home', label: '홈', icon: 'M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z' },
+  { id: 'review', label: '복습', icon: 'M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7' },
+  { id: 'me', label: '내 기록', icon: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4.5 20.500a7.500 7.500 0 0 1 15 0' },
+];
+function tabbar(due) {
+  return `<nav class="tabbar" aria-label="주 메뉴">${TABS.map(t => `<button class="tab ${t.id === tab ? 'on' : ''}" data-a="tab" data-id="${t.id}" ${t.id === tab ? 'aria-current="page"' : ''}>
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${t.icon}"/></svg>
+    <span>${t.label}</span>${t.id === 'review' && due ? `<em>${due > 99 ? '99+' : due}</em>` : ''}</button>`).join('')}</nav>`;
+}
+function topbar(st) {
+  return `
   <header class="top">
     <div class="brand-row"><a class="hub-btn" href="../" aria-label="English Hub 홈">${window.EH ? EH.ICON : ''}</a><div class="brand">
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 10v4M8 6v12M12 3v18M16 7v10M20 10v4"/></svg>
       귀트임
     </div></div>
     <span class="streak">${st ? `🔥 ${st}일 연속` : '오늘 첫 학습을 시작해요'}</span>
-  </header>
+  </header>`;
+}
 
+function renderHome() {
+  const due = dueItems(), st = streak();
+  app.innerHTML = topbar(st) + (tab === 'review' ? pageReview(due) : tab === 'me' ? pageMe(due, st) : pageHome(due)) + tabbar(due.length);
+}
+
+function pageHome(due) {
+  const knownN = ALL.filter(known).length, td = S.days[today()] || 0, nu = nextUnit();
+  const started = Object.keys(S.srs).length > 0;
+  return `
   <section class="hero">
     <h1>자막 없이 영화를 보는 날까지,<br><em>하루 ${S.goal}문장</em>씩 귀를 엽니다.</h1>
     <p>지문을 가린 채 먼저 듣고, 확인하고, 잊을 때쯤 다시 듣습니다. 6단계 ${ALL.length}문장이 짧은 인사말에서 영화 장면까지 이어집니다.</p>
@@ -206,11 +226,13 @@ function renderHome() {
     ${!synth ? `<p class="notice">이 브라우저는 음성 재생을 지원하지 않습니다. Chrome, Safari, Edge 최신 버전에서 열어 주세요.</p>` : ''}
   </section>
 
+
   <section class="stats">
     <div class="stat">${ring(td / S.goal)}<div><b>${td} / ${S.goal}</b><small>오늘 들은 문장</small></div></div>
     <div class="stat">${ring(knownN / ALL.length)}<div><b>${knownN} / ${ALL.length}</b><small>귀에 익은 문장</small></div></div>
     <div class="stat">${ring(due.length ? 1 : 0)}<div><b>${due.length}</b><small>복습할 문장</small></div></div>
   </section>
+
 
   <h2 class="eyebrow">레벨 선택 — 처음이라면 1단계부터</h2>
   ${LEVELS.map(L => {
@@ -233,13 +255,57 @@ function renderHome() {
     </section>`;
   }).join('')}
 
+
   <h2 class="eyebrow">이렇게 학습하세요</h2>
   <div class="method">
     <div><b>가리고 듣기</b>지문 없이 2~3번 듣고 들린 만큼만 머릿속에 적습니다.</div>
     <div><b>맞춰 보기</b>단어 순서 맞추기나 받아쓰기로 정말 들었는지 확인합니다.</div>
     <div><b>지문 확인</b>안 들린 부분과 듣기 팁을 보고, 왜 안 들렸는지 이해합니다.</div>
     <div><b>따라 말하기</b>지문을 보며 소리와 동시에 따라 말합니다. 입이 되면 귀도 열립니다.</div>
-  </div>
+  </div>`;
+}
+
+function pageReview(due) {
+  const soon = ALL.filter(it => S.srs[it.id] && S.srs[it.id].d > Date.now() && S.srs[it.id].d <= Date.now() + DAY).length;
+  return `
+  <section class="hero">
+    <h1>복습</h1>
+    <p>들은 문장은 1일 · 3일 · 7일 · 14일 · 30일 뒤에 다시 나옵니다. 잊을 때쯤 다시 들어야 귀에 남습니다.</p>
+  </section>
+  <section class="review-card">
+    <b class="bignum">${due.length}</b><small>지금 복습할 문장</small>
+    ${due.length ? `<button class="btn" data-a="review">▶ 복습 시작 · ${Math.min(20, due.length)}문장</button>`
+      : `<p class="empty">${Object.keys(S.srs).length ? '지금은 복습할 문장이 없어요.' : '아직 들은 문장이 없어요. 홈에서 첫 학습을 시작해 보세요.'}</p>`}
+    ${soon ? `<small>내일까지 ${soon}문장이 더 돌아와요</small>` : ''}
+  </section>
+  ${due.length ? `<h2 class="eyebrow">기다리는 문장</h2>
+  <div class="due-list">${due.slice(0, 20).map(it => `<div><span class="lv-dot" style="background:var(--l${it.level.id})"></span><span>${esc(it.ko)}<small>레벨 ${it.level.id} · ${esc(it.unit.title)}</small></span></div>`).join('')}
+    ${due.length > 20 ? `<p class="more">외 ${due.length - 20}문장</p>` : ''}</div>` : ''}`;
+}
+
+function pageMe(due, st) {
+  const knownN = ALL.filter(known).length, td = S.days[today()] || 0;
+  const total = Object.values(S.days).reduce((a, n) => a + n, 0), daysN = Object.keys(S.days).length;
+  const week = [...Array(7)].map((_, i) => { const d = new Date(); d.setDate(d.getDate() - (6 - i)); return { n: S.days[fmt(d)] || 0, wd: '일월화수목금토'[d.getDay()], today: i === 6 }; });
+  const top = Math.max(S.goal, ...week.map(d => d.n));
+  return `
+  <section class="hero">
+    <h1>내 기록</h1>
+    <p>${st ? `${st}일째 이어 듣고 있어요.` : '오늘 첫 학습을 시작해 보세요.'} 지금까지 ${daysN}일 동안 ${total.toLocaleString('ko-KR')}번 들었습니다.</p>
+  </section>
+
+  <section class="stats">
+    <div class="stat">${ring(td / S.goal)}<div><b>${td} / ${S.goal}</b><small>오늘 들은 문장</small></div></div>
+    <div class="stat">${ring(knownN / ALL.length)}<div><b>${knownN} / ${ALL.length}</b><small>귀에 익은 문장</small></div></div>
+    <div class="stat">${ring(due.length ? 1 : 0)}<div><b>${due.length}</b><small>복습할 문장</small></div></div>
+  </section>
+
+
+  <h2 class="eyebrow">이번 주</h2>
+  <div class="week">${week.map(d => `<div class="${d.n >= S.goal ? 'hit' : ''} ${d.today ? 'today' : ''}"><i style="height:${Math.max(d.n ? 6 : 0, d.n / top * 100)}%"></i><b>${d.n || ''}</b><span>${d.wd}</span></div>`).join('')}</div>
+
+  <h2 class="eyebrow">레벨별 진도</h2>
+  <div class="lv-prog">${LEVELS.map(L => { const k = L.items.filter(known).length; return `<div style="--c:var(--l${L.id})"><span><b>레벨 ${L.id}</b> ${esc(L.name)}</span><small>${k} / ${L.items.length}</small><div class="bar"><i style="width:${k / L.items.length * 100}%"></i></div></div>`; }).join('')}</div>
 
   <h2 class="eyebrow">설정</h2>
   <div class="settings">
@@ -251,7 +317,8 @@ function renderHome() {
     <label>하루 목표
       <select data-c="goal">${[10, 20, 30, 50].map(n => `<option value="${n}" ${n === S.goal ? 'selected' : ''}>${n}문장</option>`).join('')}</select>
     </label>
-  </div>`;
+  </div>
+  <p class="foot-note">귀트임 · 학습 기록은 이 기기에만 저장됩니다.</p>`;
 }
 
 /* ================= 학습 세션 ================= */
@@ -442,6 +509,7 @@ function render() {
 /* ================= 동작 ================= */
 const ACT = {
   home() { stop(); ses = null; view = 'home'; render(); },
+  tab(el) { tab = el.dataset.id; render(); window.scrollTo(0, 0); },
   level(el) { const id = +el.dataset.id; S.level = S.level === id ? 0 : id; save(); render(); },
   unit(el) { const u = UNITS.find(x => x.id === el.dataset.id); S.level = u.level.id; save(); startSession(u.items, { unit: u }); },
   review() { startSession(dueItems().slice(0, 20), { label: '복습' }); },

@@ -171,7 +171,7 @@
   }
 
   const NAV = [
-    { id: "home", label: "학습", icon: '<path d="M3 11.2 12 3l9 8.2V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>' },
+    { id: "home", label: "홈", icon: '<path d="M3 11.2 12 3l9 8.2V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>' },
     { id: "review", label: "복습", icon: '<path d="M12 4a8 8 0 0 1 6.9 4H16v2h6V4h-2v2.3A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8zm8 8a8 8 0 0 1-14.9 4H8v-2H2v6h2v-2.3A10 10 0 0 0 22 12z"/>' },
     { id: "book", label: "문법 사전", icon: '<path d="M6 2h12a2 2 0 0 1 2 2v18H7a3 3 0 0 1-3-3V4a2 2 0 0 1 2-2zm1 16a1 1 0 0 0 0 2h11v-2zm2-11v2h7V7z"/>' },
     { id: "me", label: "내 기록", icon: '<circle cx="12" cy="8" r="4.2"/><path d="M3.5 21a8.5 8.5 0 0 1 17 0z"/>' }

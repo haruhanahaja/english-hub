@@ -1,4 +1,4 @@
-/* Auto Word — 중학 → 고등 → 토익 영단어 학습 앱 (의존성 없는 단일 스크립트) */
+/* 씨앗단어 — 중학 → 고등 → 토익 영단어 학습 앱 (의존성 없는 단일 스크립트) */
 (() => {
   'use strict';
 
@@ -23,7 +23,7 @@
     { id: 'course', label: '코스', icon: 'course' },
     { id: 'review', label: '복습', icon: 'review' },
     { id: 'words', label: '단어장', icon: 'book' },
-    { id: 'stats', label: '통계', icon: 'stats' },
+    { id: 'stats', label: '내 기록', icon: 'user' },
     { id: 'settings', label: '설정', icon: 'gear' },
   ];
   const TTS = 'speechSynthesis' in window;
@@ -45,6 +45,7 @@
     review: 'M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7',
     book: 'M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19V5M8 7h7',
     stats: 'M4 20V10M10 20V4M16 20v-7M22 20H2',
+    user: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4.5 20.500a7.500 7.500 0 0 1 15 0',
     gear: 'M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M16 4v4M10 10v4M18 16v4',
     sound: 'M4 9v6h4l5 4V5L8 9zM16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11',
     star: 'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z',
@@ -378,7 +379,7 @@
       </section>
 
       <section class="section">
-        <div class="section-head"><h3>이번 주 학습량</h3><a class="sub" href="#/stats">통계 전체 보기</a></div>
+        <div class="section-head"><h3>이번 주 학습량</h3><a class="sub" href="#/stats">내 기록 보기</a></div>
         <div class="card">${weekChart(7)}</div>
       </section>
     </div>`;
@@ -528,7 +529,7 @@
     const total = Object.values(S.days).reduce((a, d) => a + (d.n || 0), 0);
     const tile = (label, val, unit, sub) => `<div class="card tile"><span class="label">${label}</span><strong>${val}<small>${unit}</small></strong><p>${sub}</p></div>`;
     return `<div class="page">
-      <header class="page-head"><div><p class="sub">꾸준함이 실력이 됩니다</p><h1>통계</h1></div></header>
+      <header class="page-head"><div><p class="sub">꾸준함이 실력이 됩니다</p><h1>내 기록</h1></div><a class="btn ghost" href="#/settings">${ic('gear')} 설정</a></header>
       <section class="grid4">
         ${tile('학습한 단어', seen, '개', `전체의 ${Math.round(seen / ALL.length * 100)}%`)}
         ${tile('암기 완료', done, '개', '기억 4단계 이상')}
@@ -578,7 +579,7 @@
         ${row('백업 가져오기', '저장해 둔 파일로 기록 복원', '<button class="btn sm" data-a="import">가져오기</button>')}
         ${row('학습 기록 초기화', '모든 진행 상황이 삭제됩니다', '<button class="btn sm danger-ghost" data-a="reset">초기화</button>')}
       </div>
-      <p class="foot-note">Auto Word · 학습 기록은 이 브라우저에만 저장됩니다.</p>
+      <p class="foot-note">씨앗단어 · 학습 기록은 이 브라우저에만 저장됩니다.</p>
     </div>`;
   }
 
@@ -606,7 +607,7 @@
   function onboarding() {
     openModal(`<div class="ob">
       <div class="logo big">${LOGO}</div>
-      <h2>Auto Word에 오신 것을 환영해요</h2>
+      <h2>씨앗단어에 오신 것을 환영해요</h2>
       <p class="sub">중학 → 고등 → 토익, 한 길로 이어지는 ${ALL.length}단어 코스입니다.<br>어디서부터 시작할까요?</p>
       <div class="ob-levels">${LEVELS.map((l, i) => `<button class="ob-lv lv-${l.key} ${OB.start === i ? 'on' : ''}" data-a="ob-start" data-v="${i}">
         <small>${l.step}</small><b>${l.name}</b><span>${l.desc}</span></button>`).join('')}</div>
@@ -849,12 +850,12 @@
     const sk = streak(), day = S.days[today()] || { n: 0 }, due = dueWords().length;
     const link = (n) => `<a class="nav-item ${n.id === active ? 'on' : ''}" href="#/${n.id}" ${n.id === active ? 'aria-current="page"' : ''}>${ic(n.icon)}<span>${n.label}</span>${n.id === 'review' && due ? `<em>${due > 99 ? '99+' : due}</em>` : ''}</a>`;
     const hubIc = EH ? EH.ICON : '';
-    $('#side').innerHTML = `<a class="logo" href="#/home">${LOGO}<span class="logo-text">Auto Word</span></a>
+    $('#side').innerHTML = `<a class="logo" href="#/home">${LOGO}<span class="logo-text">씨앗단어</span></a>
       <a class="hub-link" href="../">${hubIc}<span>English Hub</span></a>
       <nav class="nav" aria-label="주 메뉴">${NAV.map(link).join('')}</nav>
       <div class="side-card"><div class="side-streak"><span class="flame-mini ${sk ? 'on' : ''}">${ic('flame')}</span><b>${sk}일 연속</b></div>
         <div class="progress"><i style="width:${Math.min(100, day.n / S.goal * 100)}%"></i></div><span class="sub">오늘 ${day.n} / ${S.goal}회</span></div>`;
-    $('#mtop').innerHTML = `<span class="mtop-left"><a class="icon-btn" href="../" aria-label="English Hub 홈">${hubIc}</a><a class="logo" href="#/home">${LOGO}<span class="logo-text">Auto Word</span></a></span>
+    $('#mtop').innerHTML = `<span class="mtop-left"><a class="icon-btn" href="../" aria-label="English Hub 홈">${hubIc}</a><a class="logo" href="#/home">${LOGO}<span class="logo-text">씨앗단어</span></a></span>
       <span class="mtop-right"><span class="pill ${sk ? 'on' : ''}">${ic('flame')}${sk}</span><a class="icon-btn" href="#/settings" aria-label="설정">${ic('gear')}</a></span>`;
     $('#tabbar').innerHTML = NAV.slice(0, 5).map(link).join('');
     if (EH) {   // 통합 홈이 보여 줄 요약

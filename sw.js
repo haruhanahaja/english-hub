@@ -3,7 +3,7 @@
    글꼴(CDN)은 "저장본 먼저".
    SHELL 목록과 CACHE 이름 뒤의 날짜는 tools/publish_web.sh 가 채운다(직접 고치지 않는다). */
 const PREFIX = 'englishhub-';
-const CACHE = PREFIX + '20261113-1328';
+const CACHE = PREFIX + '20261113-1429';
 const SHELL = ['grammar/css/style.css', 'grammar/', 'grammar/js/app.js', 'grammar/js/core.js', 'grammar/js/data/ch1.js', 'grammar/js/data/ch2.js', 'grammar/js/data/ch3.js', 'grammar/js/data/ch4.js', 'grammar/js/data/ch5.js', 'grammar/js/data/ch6.js', 'hear/app.js', 'hear/data.js', 'hear/', 'hear/style.css', 'icons/apple-touch-icon.png', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', './', 'manifest.webmanifest', 'shared/hub.js', 'word/assets/css/style.css', 'word/assets/data/forms.js', 'word/assets/data/high.js', 'word/assets/data/middle.js', 'word/assets/data/toeic.js', 'word/assets/js/app.js', 'word/'];
 
 self.addEventListener('install', (e) => {
